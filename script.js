@@ -13,8 +13,15 @@ const iconNames = [
 
 // Build full GitHub raw URLs
 const icons = iconNames.map(name =>
-  `https://raw.githubusercontent.com/hayatcode/Portfolio/main/Organize%20Icons%20(SVGs)/${encodeURIComponent(name)}.svg`
+  `https://raw.githubusercontent.com/hayatcode/Portfolio/main/Asset/${encodeURIComponent(name)}.svg`
 );
+
+
+//-------------
+  //const icons = iconNames.map(name =>
+  //`https://raw.githubusercontent.com/hayatcode/Portfolio/main/Organize%20Icons%20(SVGs)/${encodeURIComponent(name)}.svg`
+// -------------
+//);
 
 // Set renderer size
 renderer.setSize(375, 375);
