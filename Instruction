@@ -1,0 +1,139 @@
+--------------------------------------------------------------------------
+STEP 1: ✅ Set Up Your Folder & Files
+In your GitHub repo or local project, create:
+--------------------------------------------------------------------------
+
+css
+
+/Portfolio/
+├── index.html     ✅ Main webpage
+├── script.js      ✅ Animation logic
+└── Asset/         ✅ Folder with SVG icons (e.g., AWS.svg, Docker icon.svg, etc.)
+
+
+--------------------------------------------------------------------------
+STEP 2: ✅ Create index.html
+Paste the following:
+--------------------------------------------------------------------------
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>3D Skill Icons</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #101013;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: sans-serif;
+    }
+    .skill-tag-cloud {
+      width: 375px;
+      height: 375px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="skill-tag-cloud"></div>
+
+  <!-- Load Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Load your script -->
+  <script src="script.js"></script>
+</body>
+</html>
+
+---------------------------------------------------------------------
+STEP 3: ✅ Create script.js
+This code pulls icons from your GitHub repo and rotates them in 3D
+---------------------------------------------------------------------
+
+
+// Set up Three.js scene
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+const group = new THREE.Group();
+const loader = new THREE.TextureLoader();
+
+// 👇 Update this with your actual icon names from the Asset folder
+const iconNames = [
+  "AWS", "Azure cloud", "Docker icon", "Git", "Github",
+  "Kubernetes", "Python", "SAP ABAP", "SonarQube"
+];
+
+// GitHub-hosted SVG icon links
+const icons = iconNames.map(name =>
+  `https://raw.githubusercontent.com/hayatcode/Portfolio/main/Asset/${encodeURIComponent(name)}.svg`
+);
+
+// Set renderer size and attach it to the div
+renderer.setSize(375, 375);
+document.querySelector(".skill-tag-cloud").appendChild(renderer.domElement);
+renderer.setClearColor(0x000000, 0);  // Transparent background
+
+// Configure rotation
+const radius = 27;
+const scale = 6;
+const sprites = [];
+
+icons.forEach((url, i) => {
+  loader.load(url, (texture) => {
+    const phi = Math.acos(-1 + (2 * i) / icons.length);
+    const theta = Math.sqrt(icons.length * Math.PI) * phi;
+
+    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture }));
+    sprite.scale.set(scale, scale, 1);
+    sprite.position.set(
+      radius * Math.cos(theta) * Math.sin(phi),
+      radius * Math.sin(theta) * Math.sin(phi),
+      radius * Math.cos(phi)
+    );
+
+    group.add(sprite);
+    sprites.push(sprite);
+  });
+});
+
+scene.add(group);
+camera.position.z = 50;
+
+// Mouse interaction
+let mouseX = 0;
+let mouseY = 0;
+renderer.domElement.addEventListener('mousemove', e => {
+  const rect = renderer.domElement.getBoundingClientRect();
+  mouseX = 2 * (e.clientX - rect.left) / 375 - 1;
+  mouseY = 2 * -(e.clientY - rect.top) / 375 + 1;
+});
+
+// Animation loop
+function animate() {
+  requestAnimationFrame(animate);
+  group.rotation.y += 0.005 + mouseX * 0.02;
+  group.rotation.x += mouseY * 0.02;
+  group.children.forEach(sprite => sprite.lookAt(camera.position));
+  renderer.render(scene, camera);
+}
+animate();
+
+
+--------------------------------------------------------------------
+STEP 4: ✅ Push Files to GitHub
+Your structure should now look like:
+--------------------------------------------------------------------
+
+/Portfolio/
+├── index.html
+├── script.js
+└── Asset/
+     ├── AWS.svg
+     ├── Docker icon.svg
+     └── etc...
+
