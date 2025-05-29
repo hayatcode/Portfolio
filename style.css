@@ -1,0 +1,30 @@
+body {
+  background-color: #101013;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 40px;
+}
+
+.tagcloud-container {
+  width: 100%;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+}
+
+.tagcloud-container span {
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.tagcloud-container span:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.2);
+}
